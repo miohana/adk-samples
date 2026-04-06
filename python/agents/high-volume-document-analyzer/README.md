@@ -263,20 +263,17 @@ uvx agent-starter-pack create my-document-analyzer -a local@python/agents/high-v
 The starter pack will prompt you to select deployment options and provides additional production-ready features including automated CI/CD deployment scripts.
 
 ### 1. Vertex AI Agent Engine Deployment
-When deploying to **Vertex AI Agent Engine**, pass the required environment variables directly via the deploy command. 
+The project includes a dedicated deployment script that automates the creation and update of your Agent Engine resource, ensuring all environment variables and dependencies are correctly configured.
 
-> **💡 Pro Tip:** While it's possible to deploy with `USE_MOCK_API=True` to Agent Engine for quick integration tests (e.g., verifying that the Agent Engine handshake works without needing external connectivity), a production-ready deployment should always use the real pipeline (`USE_MOCK_API=False`) and point to your organization's endpoints.
+1. **Configure Environment**: Ensure your `.env` file has the `STAGING_BUCKET` defined (e.g., `gs://your-bucket-name`).
+2. **Run the Deployment Script**:
+   ```bash
+   uv run python deploy/deploy_agent.py
+   ```
 
-```bash
-cd my-document-analyzer && \
-uv export --no-hashes --no-header --no-dev --no-emit-project --no-annotate > high_volume_document_analyzer/app_utils/.requirements.txt && \
-   uv run -m high_volume_document_analyzer.app_utils.deploy \
-   --source-packages=./high_volume_document_analyzer \
-   --entrypoint-module=high_volume_document_analyzer.agent_engine_app \
-   --entrypoint-object=agent_engine \
-   --requirements-file=high_volume_document_analyzer/app_utils/.requirements.txt \
-   --set-env-vars="USE_MOCK_API=False,GOOGLE_CLOUD_LOCATION=global,DOCUMENT_API_BASE_URL=https://api.your-org.com/v1/documents,URL_TOKEN_API_URL=https://auth.your-org.com/oauth/token,CLIENT_ID=prod-client-id,CLIENT_SECRET=prod-client-secret"
-```
+> **💡 Pro Tip:** The script creates a `.agent_engine_resource.json` file to track your deployment. Subsequent runs will automatically **update** the existing agent instead of creating a new one.
+
+For more details on the deployment process, see the [Deploy Guide](deploy/README.md).
 
 The service account running the agent must have access to **Secret Manager** if you are using it for production credentials:
 

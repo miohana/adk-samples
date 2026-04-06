@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "The High-Volume Document Analyzer Agent queries and synthesizes information from a large corpus of internal documents (legal statutes, process manuals, etc.)"
 authors = [
     { name = "Mikaeri Ohana", email = "mikaeri@google.com" },
+    { name = "Afonso Menegola", email = "afonsomenegola@google.com" },
 ]
 maintainers = [
     { name = "Mikaeri Ohana", email = "mikaeri@google.com" },

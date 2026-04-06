@@ -12,7 +12,7 @@ maintainers = [
 
 license = "Apache-2.0"
 readme = "README.md"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.11,<3.14"
 
 dependencies = [
     "google-adk>=1.23.0",
@@ -45,9 +45,11 @@ lint = [
     "types-requests>=2.32.0.20240914",
 ]
 
+
 [tool.ruff]
-line-length = 88
-target-version = "py310"
+extend = "../../../pyproject.toml"
+target-version = "py311"
+
 
 [tool.ruff.lint]
 select = [
@@ -106,5 +108,7 @@ example_question = "Analyze documents for collection 12345"
 [tool.agent-starter-pack.settings]
 agent_directory = "high_volume_document_analyzer"
 
-[tool.uv]
-index-url = "https://pypi.org/simple"
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true

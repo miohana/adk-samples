@@ -14,9 +14,9 @@
 
 """Unit tests for the Agent initialization."""
 
-import os
-from high_volume_document_analyzer.agent import root_agent
 from google.adk.agents import LlmAgent
+
+from high_volume_document_analyzer.agent import root_agent
 
 
 def test_agent_initialization():

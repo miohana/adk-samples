@@ -14,19 +14,17 @@
 
 # high_volume_document_analyzer/tools/process_toolset.py
 
-import aiohttp
 import asyncio
-import logging
 import base64
+import logging
+import os
 import ssl
 import time
-from typing import List, Dict, Optional, Tuple, Any
 
-import os
-
+import aiohttp
 import google.auth
-from google.cloud import secretmanager
 from dotenv import load_dotenv
+from google.cloud import secretmanager
 
 load_dotenv()
 
@@ -72,7 +70,7 @@ def get_secret_client():
 
 def get_secret(
     project_id: str, secret_id: str, version_id: str = "latest"
-) -> Optional[str]:
+) -> str | None:
     """Fetches secret from Secret Manager efficiently."""
     try:
         client = get_secret_client()
@@ -86,7 +84,7 @@ def get_secret(
         return None
 
 
-def get_credentials() -> Tuple[Optional[str], Optional[str]]:
+def get_credentials() -> tuple[str | None, str | None]:
     """Retrieves credentials using local cache or environment variables."""
     if _CACHED_CREDENTIALS["key"] and _CACHED_CREDENTIALS["secret"]:
         return _CACHED_CREDENTIALS["key"], _CACHED_CREDENTIALS["secret"]
@@ -104,7 +102,7 @@ def get_credentials() -> Tuple[Optional[str], Optional[str]]:
 
     # 2. Fallback to Secret Manager
     try:
-        creds, project_id = google.auth.default()
+        _creds, project_id = google.auth.default()
 
         if not project_id:
             logging.info(
@@ -181,7 +179,7 @@ async def get_auth_token_async() -> str:
         raise
 
 
-async def fetch_document_urls_async(collection_id: str) -> List[str]:
+async def fetch_document_urls_async(collection_id: str) -> list[str]:
     """Fetches list of URLs from the API."""
 
     # ==========================================
@@ -234,7 +232,7 @@ async def fetch_document_urls_async(collection_id: str) -> List[str]:
 
 async def download_file_async(
     session: aiohttp.ClientSession, url: str, semaphore: asyncio.Semaphore
-) -> Optional[Dict]:
+) -> dict | None:
     """
     Verifies the header BEFORE downloading the file.
     Saves bandwidth by ignoring not allowed types.
@@ -299,11 +297,11 @@ async def download_file_async(
                     }
 
         except Exception as e:
-            logging.error(f"DOWNLOAD: Failed at {url}: {str(e)}")
+            logging.error(f"DOWNLOAD: Failed at {url}: {e!s}")
             return None
 
 
-async def download_batch_async(urls: List[str]) -> List[Optional[Dict]]:
+async def download_batch_async(urls: list[str]) -> list[dict | None]:
     """
     Downloads multiple files in parallel with concurrency control.
     """

@@ -14,15 +14,16 @@
 
 # high_volume_document_analyzer/tools/document_toolset.py
 
-import os
 import logging
-import asyncio
-from typing import Dict, Literal, List, Any, Optional
+import os
+from typing import Any, Literal
+
 import google.auth
 import vertexai
-from vertexai.generative_models import GenerativeModel, Part, GenerationConfig
 from google.adk.tools import ToolContext
-from .process_toolset import fetch_document_urls_async, download_batch_async
+from vertexai.generative_models import GenerationConfig, GenerativeModel, Part
+
+from .process_toolset import download_batch_async, fetch_document_urls_async
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -32,7 +33,7 @@ CHUNK_SIZE = int(os.getenv("BATCH_SIZE", "10"))
 MODEL_NAME = os.getenv("MODEL_NAME_DOC_PROCESSING", "gemini-2.5-flash")
 LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
 
-_MODEL_INSTANCE: Optional[GenerativeModel] = None
+_MODEL_INSTANCE: GenerativeModel | None = None
 
 
 def get_model_instance() -> GenerativeModel:
@@ -61,7 +62,7 @@ async def analyze_document_next_chunk(
     question: str,
     sort_order: Literal["asc", "desc"] = "asc",
     reset_search: bool = False,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Iterative tool (Async): Analyzes documents in batches.
 
@@ -144,14 +145,14 @@ async def analyze_document_next_chunk(
         system_instruction = f"""
         You are an auditor analyzing a document collection.
         We are reading the collection in batches.
-        
+
         CONTEXT:
-        - CURRENT BATCH: {len(chunk_urls)} documents. 
+        - CURRENT BATCH: {len(chunk_urls)} documents.
         - ORDER: {"Newest to oldest" if is_descending else "Chronological"}.
         - QUESTION: "{question}"
-        
+
         YOUR MISSION (CLASSIFY THE QUESTION):
-        
+
         SCENARIO 1 (SUMMARY/GENERAL):
            - ACTION: Summarize the main points of THIS BATCH in short, direct topics.
            - RULE: Be concise.
@@ -218,4 +219,4 @@ async def analyze_document_next_chunk(
 
     except Exception as e:
         logging.error(f"TOOL Error: {e}", exc_info=True)
-        return {"status": "error", "content": f"Error: {str(e)}"}
+        return {"status": "error", "content": f"Error: {e!s}"}

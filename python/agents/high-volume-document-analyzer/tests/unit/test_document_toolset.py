@@ -14,12 +14,14 @@
 
 """Unit tests for the document pagination logic."""
 
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import patch, AsyncMock, MagicMock
+from google.adk.tools import ToolContext
+
 from high_volume_document_analyzer.tools.document_toolset import (
     analyze_document_next_chunk,
 )
-from google.adk.tools import ToolContext
 
 
 @pytest.fixture

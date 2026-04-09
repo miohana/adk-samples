@@ -1450,13 +1450,13 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "aiohttp" },
+    { name = "aiohttp", specifier = "==3.13.4" },
     { name = "beautifulsoup4", specifier = "==4.14.3" },
     { name = "google-adk", specifier = ">=1.28.0" },
     { name = "google-cloud-aiplatform", extras = ["adk", "agent-engines"], specifier = ">=1.93.0" },
     { name = "opentelemetry-instrumentation-google-genai", specifier = "==0.4b0" },
     { name = "pandas", specifier = "==2.3.3" },
-    { name = "pypdf" },
+    { name = "pypdf", specifier = "==6.9.2" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "reportlab", specifier = "==4.2.0" },
     { name = "requests", specifier = "==2.32.4" },

@@ -17,17 +17,16 @@
 """High-Volume Document Analyzer Agent: query and synthesize information from documents."""
 
 import os
+
 from dotenv import load_dotenv
-
-load_dotenv()
-
 from google.adk.agents import LlmAgent
-from google.adk.apps import App
+
 from high_volume_document_analyzer.prompt import ROOT_AGENT_INSTRUCTION
 from high_volume_document_analyzer.tools.document_toolset import (
     analyze_document_next_chunk,
 )
 
+load_dotenv()
 
 root_agent = LlmAgent(
     name="document_analyzer_agent",

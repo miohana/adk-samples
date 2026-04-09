@@ -14,8 +14,9 @@
 
 """Configuration for test suites."""
 
-import pytest
 import asyncio
+
+import pytest
 
 
 @pytest.fixture(scope="session")

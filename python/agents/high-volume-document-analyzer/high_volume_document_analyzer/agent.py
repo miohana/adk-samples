@@ -24,15 +24,15 @@ load_dotenv()
 from google.adk.agents import LlmAgent
 from google.adk.apps import App
 from high_volume_document_analyzer.prompt import ROOT_AGENT_INSTRUCTION
-from high_volume_document_analyzer.tools.document_toolset import analyze_document_next_chunk
+from high_volume_document_analyzer.tools.document_toolset import (
+    analyze_document_next_chunk,
+)
 
 
 root_agent = LlmAgent(
     name="document_analyzer_agent",
     description="Agent that analyzes document collections in chunks to answer user questions.",
-    model=os.getenv("MODEL_NAME_AGENT", "gemini-2.5-flash"), 
+    model=os.getenv("MODEL_NAME_AGENT", "gemini-2.5-flash"),
     instruction=ROOT_AGENT_INSTRUCTION,
-    tools=[
-        analyze_document_next_chunk 
-    ],
+    tools=[analyze_document_next_chunk],
 )

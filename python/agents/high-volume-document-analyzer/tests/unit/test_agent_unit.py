@@ -18,6 +18,7 @@ import os
 from high_volume_document_analyzer.agent import root_agent
 from google.adk.agents import LlmAgent
 
+
 def test_agent_initialization():
     """Validates that the agent initializes properly without validation errors."""
     assert root_agent is not None

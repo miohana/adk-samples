@@ -16,21 +16,33 @@
 
 import pytest
 from unittest.mock import patch
-from high_volume_document_analyzer.tools.process_toolset import fetch_document_urls_async
+from high_volume_document_analyzer.tools.process_toolset import (
+    fetch_document_urls_async,
+)
+
 
 @pytest.mark.asyncio
 async def test_fetch_mock_urls():
     """Verify that when USE_MOCK_API is True, the mock URL list is predictably returned."""
-    with patch("high_volume_document_analyzer.tools.process_toolset.USE_MOCK_API", True):
+    with patch(
+        "high_volume_document_analyzer.tools.process_toolset.USE_MOCK_API", True
+    ):
         urls = await fetch_document_urls_async("test_collection_123")
         assert len(urls) == 1
         assert "dummy.pdf" in urls[0]
         assert "w3.org" in urls[0]
 
+
 @pytest.mark.asyncio
 async def test_fetch_real_urls_empty_on_error():
     """Verify that an exception inside the real API call safely returns an empty list."""
-    with patch("high_volume_document_analyzer.tools.process_toolset.USE_MOCK_API", False):
-        with patch("high_volume_document_analyzer.tools.process_toolset.get_auth_token_async", side_effect=Exception("Mock Auth Failure")):
+    with patch(
+        "high_volume_document_analyzer.tools.process_toolset.USE_MOCK_API",
+        False,
+    ):
+        with patch(
+            "high_volume_document_analyzer.tools.process_toolset.get_auth_token_async",
+            side_effect=Exception("Mock Auth Failure"),
+        ):
             urls = await fetch_document_urls_async("test_collection")
             assert urls == []

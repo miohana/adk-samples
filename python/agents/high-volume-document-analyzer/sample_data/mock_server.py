@@ -21,36 +21,42 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
+
 # 1. Simulate the OAuth (Token) Endpoint
-@app.route('/token', methods=['POST'])
+@app.route("/token", methods=["POST"])
 def get_token():
-    auth = request.headers.get('Authorization')
+    auth = request.headers.get("Authorization")
     logger.info(f"MOCK AUTH: Received token request with Auth: {auth}")
-    
-    return jsonify({
-        "access_token": "mock-access-token-12345",
-        "expires_in": 3600
-    })
+
+    return jsonify(
+        {"access_token": "mock-access-token-12345", "expires_in": 3600}
+    )
+
 
 # 2. Simulate the Document API Endpoint
-@app.route('/documents/<collection_id>', methods=['GET'])
+@app.route("/documents/<collection_id>", methods=["GET"])
 def get_documents(collection_id):
-    token = request.headers.get('Authorization')
-    logger.info(f"MOCK API: Fetching collection '{collection_id}' with Token: {token}")
-    
+    token = request.headers.get("Authorization")
+    logger.info(
+        f"MOCK API: Fetching collection '{collection_id}' with Token: {token}"
+    )
+
     # Only return documents for collection 12345
     if collection_id == "12345":
         # Returning 15 documents to trigger batching/pagination (Batch size is 10)
-        return jsonify([
-            f"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf?id={i}" 
-            for i in range(1, 16)
-        ])
-    
+        return jsonify(
+            [
+                f"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf?id={i}"
+                for i in range(1, 16)
+            ]
+        )
+
     # For any other collection, return empty list
     logger.warning(f"MOCK API: Collection '{collection_id}' not found.")
     return jsonify([])
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     print("\n🚀 Mock Server running on http://127.0.0.1:5050")
     print("👉 Collection available: 12345 (15 documents)")
     print("👉 Try in Playground: 'Analyze collection 12345'\n")

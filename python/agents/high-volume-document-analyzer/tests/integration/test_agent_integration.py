@@ -23,6 +23,7 @@ from high_volume_document_analyzer.agent import root_agent
 
 pytest_plugins = ("pytest_asyncio",)
 
+
 @pytest.fixture(scope="session", autouse=True)
 def load_env():
     dotenv.load_dotenv()
@@ -31,7 +32,9 @@ def load_env():
 async def _run_agent(user_input: str) -> str:
     """Helper to run the agent and return the final response text."""
     runner = InMemoryRunner(agent=root_agent)
-    session = await runner.session_service.create_session(app_name=runner.app_name, user_id="test_user")
+    session = await runner.session_service.create_session(
+        app_name=runner.app_name, user_id="test_user"
+    )
     content = UserContent(parts=[Part(text=user_input)])
     response = ""
     async for event in runner.run_async(
@@ -39,7 +42,11 @@ async def _run_agent(user_input: str) -> str:
         session_id=session.id,
         new_message=content,
     ):
-        if event.content and event.content.parts and event.content.parts[0].text:
+        if (
+            event.content
+            and event.content.parts
+            and event.content.parts[0].text
+        ):
             response += event.content.parts[0].text
     return response
 
@@ -49,5 +56,7 @@ async def test_agent_responds():
     """Agent should securely fetch mock documents and return a basic response."""
     # This invokes Vertex AI using default GCP Application Credentials.
     # Because USE_MOCK_API is True by default, it doesn't need Secret Manager or OAuth APIs.
-    response = await _run_agent("Please summarize the latest updates for collection 12345")
+    response = await _run_agent(
+        "Please summarize the latest updates for collection 12345"
+    )
     assert response, "Agent returned an empty response"

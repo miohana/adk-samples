@@ -36,7 +36,9 @@ if not STAGING_BUCKET:
 vertexai.init(
     project=PROJECT_ID,
     location=LOCATION,
-    staging_bucket=STAGING_BUCKET if STAGING_BUCKET.startswith("gs://") else f"gs://{STAGING_BUCKET}",
+    staging_bucket=STAGING_BUCKET
+    if STAGING_BUCKET.startswith("gs://")
+    else f"gs://{STAGING_BUCKET}",
 )
 
 adk_app = agent_engines.AdkApp(
@@ -76,24 +78,32 @@ common_args = {
     "env_vars": {
         "GOOGLE_CLOUD_PROJECT": PROJECT_ID,
         "GOOGLE_CLOUD_LOCATION": LOCATION,
-        "GOOGLE_GENAI_USE_VERTEXAI": os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "True"),
+        "GOOGLE_GENAI_USE_VERTEXAI": os.getenv(
+            "GOOGLE_GENAI_USE_VERTEXAI", "True"
+        ),
         "USE_MOCK_API": os.getenv("USE_MOCK_API", "True"),
         "CLIENT_ID": os.getenv("CLIENT_ID", ""),
         "CLIENT_SECRET": os.getenv("CLIENT_SECRET", ""),
         "URL_TOKEN_API_URL": os.getenv("URL_TOKEN_API_URL", ""),
         "DOCUMENT_API_BASE_URL": os.getenv("DOCUMENT_API_BASE_URL", ""),
-        "MODEL_NAME_DOC_PROCESSING": os.getenv("MODEL_NAME_DOC_PROCESSING", "gemini-2.5-flash"),
+        "MODEL_NAME_DOC_PROCESSING": os.getenv(
+            "MODEL_NAME_DOC_PROCESSING", "gemini-2.5-flash"
+        ),
         "MODEL_NAME_AGENT": os.getenv("MODEL_NAME_AGENT", "gemini-2.5-flash"),
         "BATCH_SIZE": os.getenv("BATCH_SIZE", "10"),
         "MAX_CONCURRENT_DOWNLOADS": os.getenv("MAX_CONCURRENT_DOWNLOADS", "20"),
     },
-    "display_name": os.getenv("AGENT_DISPLAY_NAME", "High-Volume Document Analyzer Agent"),
+    "display_name": os.getenv(
+        "AGENT_DISPLAY_NAME", "High-Volume Document Analyzer Agent"
+    ),
     "description": "Agent that analyzes large collections of documents in batches to answer questions and provide summaries.",
 }
 
 try:
     if existing_resource_name:
-        print(f"Updating existing Agent Engine resource: {existing_resource_name}")
+        print(
+            f"Updating existing Agent Engine resource: {existing_resource_name}"
+        )
         remote_app = agent_engines.update(
             resource_name=existing_resource_name,
             **common_args,
